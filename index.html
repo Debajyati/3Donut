@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Donut Animation</title>
+  <style>
+    body {
+      background-color: black;
+      color: lightgreen;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    pre {
+      font-size: 15px; /* Adjust size for better clarity */
+      line-height: 15px;
+    }
+  </style>
+</head>
+<body>
+  <pre id="donut"></pre>
+
+  <script>
+    let a = 1;
+    let b = 0;
+
+    const asciiframe = () => {
+      let X = [];
+      let Y = [];
+      const output = document.getElementById("donut");
+
+      a += 0.05;
+      b += 0.07;
+
+      const cosA = Math.cos(a);
+      const sinA = Math.sin(a);
+      const cosB = Math.cos(b);
+      const sinB = Math.sin(b);
+
+      for (let k = 0; k < 1760; k++) {
+        X[k] = k % 80 === 79 ? "\n" : " ";
+        Y[k] = 0;
+      }
+
+      for (let j = 0; j < 6.28; j += 0.07) {
+        const cosT = Math.cos(j);
+        const sinT = Math.sin(j);
+
+        for (let i = 0; i < 6.28; i += 0.02) {
+          const sinP = Math.sin(i);
+          const cosP = Math.cos(i);
+          const h = cosT + 2;
+          const d = 1 / (sinP * h * sinA + sinT * cosA + 5);
+          const t = sinP * h * cosA - sinT * sinA;
+          const x = (40 + 30 * d * (cosP * h * cosB - t * sinB)) | 0;
+          const y = (12 + 15 * d * (cosP * h * sinB + t * cosB)) | 0;
+          const o = x + 80 * y;
+          const n =
+            (8 *
+              ((sinT * sinA - sinP * cosT * cosA) * cosB -
+                sinP * cosT * sinA -
+                sinT * cosA -
+                cosP * cosT * sinB)) |
+            0;
+
+          if (y < 22 && y >= 0 && x >= 0 && x < 79 && d > Y[o]) {
+            Y[o] = d;
+            X[o] = ".,-~:;=!*#$@"[n > 0 ? n : 0];
+          }
+        }
+      }
+
+      // Update the <pre> element with the donut
+      output.textContent = X.join("");
+    };
+
+    setInterval(asciiframe, 50);
+  </script>
+</body>
+</html>
